@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="dashboard-token" content="__DASHBOARD_TOKEN__">
+  <title>تبريد iMac — لوحة المراوح</title><link rel="stylesheet" href="/app.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar"><a class="brand" href="/" aria-label="لوحة تبريد iMac"><span class="brand-mark">◉</span><span><b>تبريد iMac</b><small>لوحة المراوح المحلية</small></span></a><div class="live"><i></i><span id="service-label">جارٍ الاتصال…</span></div></header>
+    <section class="intro"><div><p class="eyebrow">مراقبة مباشرة <span></span> تحديث كل ٥ ثوانٍ</p><h1>حرارة الجهاز<br><em>تحت السيطرة.</em></h1></div><div class="date-pill"><span class="pulse"></span> حالة النظام <b id="system-state">جارٍ القراءة</b></div></section>
+    <section class="dashboard-grid" aria-label="حالة التبريد">
+      <article class="fans-panel panel"><div class="section-heading"><div><span class="eyebrow">تدفق الهواء</span><h2>سرعة المراوح</h2></div><span class="unit">RPM</span></div>
+        <div class="fan-list">
+          <div class="fan-row"><div class="fan-icon">↻</div><div class="fan-meta"><b>مروحة ١</b><small>ODD</small></div><div class="fan-value"><strong id="fan-1">—</strong><span>RPM</span></div><div class="fan-track"><i id="bar-1"></i></div></div>
+          <div class="fan-row"><div class="fan-icon">↻</div><div class="fan-meta"><b>مروحة ٢</b><small>HDD</small></div><div class="fan-value"><strong id="fan-2">—</strong><span>RPM</span></div><div class="fan-track"><i id="bar-2"></i></div></div>
+          <div class="fan-row"><div class="fan-icon">↻</div><div class="fan-meta"><b>مروحة ٣</b><small>CPU</small></div><div class="fan-value"><strong id="fan-3">—</strong><span>RPM</span></div><div class="fan-track"><i id="bar-3"></i></div></div>
+        </div><div class="fan-foot"><span class="foot-dot"></span> <span id="fan-control-state">حالة التحكم غير معروفة</span><span id="fan-foot-mode">—</span></div>
+      </article>
+      <article class="temp-panel panel"><div class="section-heading"><div><span class="eyebrow">مستشعر الحرارة</span><h2>درجة الحرارة</h2></div><span class="sensor-tag">SENSORS</span></div>
+        <div class="thermo-wrap"><svg class="thermo" viewBox="0 0 280 280" role="img" aria-label="مؤشر درجة الحرارة"><circle class="thermo-track" cx="140" cy="140" r="112"/><circle id="thermo-progress" class="thermo-progress" cx="140" cy="140" r="112"/><circle class="thermo-center" cx="140" cy="140" r="88"/><text id="dial-temp" x="140" y="143" text-anchor="middle">—°</text><text class="dial-unit" x="140" y="174" text-anchor="middle">درجة مئوية</text><text class="dial-min" x="47" y="222">40°</text><text class="dial-max" x="215" y="53">100°</text></svg><div class="temp-caption"><span id="temp-bullet" class="temp-bullet"></span><span id="temp-label">بانتظار قراءة المستشعر</span></div></div>
+        <div class="history"><div class="history-label"><b>آخر القراءات</b><small>منذ فتح اللوحة</small></div><svg viewBox="0 0 360 62" preserveAspectRatio="none" aria-label="رسم القراءات الأخيرة"><path id="history-area" d=""/><path id="history-line" d=""/></svg><div class="history-scale"><span>الآن</span><span id="reading-count">٠ قراءة</span></div></div>
+      </article>
+    </section>
+    <section class="control panel"><div class="control-copy"><span class="eyebrow">اختر أسلوب التبريد</span><h2>وضع التشغيل</h2><p>ستحتاج لتأكيد الصلاحية عند تغيير الوضع.</p></div><div class="mode-options"><button class="mode-button" id="quiet-button" data-mode="quiet"><span class="mode-icon quiet-icon">◌</span><span><b>هادئ ذكي</b><small>توازن بين الهدوء والتبريد</small></span><span class="mode-check">✓</span></button><button class="mode-button" id="boost-button" data-mode="boost"><span class="mode-icon boost-icon">⌁</span><span><b>تبريد قوي</b><small>استجابة أسرع للحرارة</small></span><span class="mode-check">✓</span></button></div><div class="notice" id="notice" role="status" aria-live="polite"></div></section>
+    <footer><span>المراوح يديرها <b>smart-fan.service</b></span><span>يعمل محليًا على هذا الجهاز <i>•</i> <span id="last-update">—</span></span></footer>
+  </main>
+</body></html>
