@@ -6,7 +6,7 @@ A small, local-only dashboard for monitoring temperatures and fan speeds on supp
 
 ## Features
 
-- Arabic right-to-left dashboard with live temperature, three fan RPM readings, service state, and a short in-page temperature trace.
+- Arabic and English dashboard with automatic right-to-left/left-to-right layout, live temperature, three fan RPM readings, service state, and a short in-page temperature trace. The language choice is saved in the browser.
 - Local HTTP server bound only to `127.0.0.1`; no third-party Python packages.
 - Explicit quiet and boost controls. Mode changes go through `pkexec`; the web server itself runs as the logged-in user.
 - Existing systemd fan controller remains responsible for thermal control. Missing sensor readings trigger its full-speed failsafe.
