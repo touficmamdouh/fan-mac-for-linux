@@ -1,5 +1,7 @@
 # iMac Fan Dashboard
 
+![iMac Fan Dashboard in English](screenshots/dashboard-en.png)
+
 A small, local-only dashboard for monitoring temperatures and fan speeds on supported Intel iMacs running Linux. It can switch the existing `smart-fan.service` between quiet-smart and boost-smart modes.
 
 > **Hardware note:** This project depends on the Apple System Management Controller (`applesmc`) Linux driver and the three-fan sysfs layout at `/sys/devices/platform/applesmc.768`. It is not a generic fan controller for every computer or iMac generation. Confirm that your system exposes these files before installing.
