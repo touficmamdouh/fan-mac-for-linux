@@ -28,7 +28,9 @@ const messages = {
     localOnDevice: 'يعمل محليًا على هذا الجهاز', connection: 'جارٍ الاتصال…', reading: 'جارٍ القراءة',
     waitingSensor: 'بانتظار قراءة المستشعر', tempUnavailable: 'قراءة الحرارة غير متاحة',
     highTemp: 'حرارة مرتفعة. التبريد يعمل', warmTemp: 'حرارة ملحوظة', stableTemp: 'درجة حرارة مستقرة',
-    serviceActive: 'الخدمة تعمل', serviceStopped: 'الخدمة متوقفة', coolingActive: 'التبريد يعمل',
+    serviceActive: 'الخدمة تعمل', serviceStopped: 'الخدمة متوقفة', serviceFailed: 'الخدمة بها عطل',
+    serviceStarting: 'الخدمة قيد التشغيل', serviceStopping: 'الخدمة قيد الإيقاف', serviceReloading: 'الخدمة تعيد التحميل',
+    serviceUnavailable: 'حالة الخدمة غير متاحة', serviceUnknown: 'حالة الخدمة غير معروفة', coolingActive: 'التبريد يعمل',
     sensorUnavailable: 'المستشعر غير متاح', dashboardOffline: 'اللوحة غير متصلة',
     controlActive: 'تحكم ذكي نشط', controlUnavailable: 'حالة التحكم غير متاحة',
     modeUnknown: 'الوضع غير معروف', quietModeShort: 'هادئ ذكي', boostModeShort: 'تبريد قوي',
@@ -57,7 +59,9 @@ const messages = {
     localOnDevice: 'Running locally on this device', connection: 'Connecting…', reading: 'Reading status',
     waitingSensor: 'Waiting for a sensor reading', tempUnavailable: 'Temperature reading unavailable',
     highTemp: 'High temperature. Cooling is active', warmTemp: 'Temperature is elevated', stableTemp: 'Temperature is stable',
-    serviceActive: 'Service running', serviceStopped: 'Service stopped', coolingActive: 'Cooling active',
+    serviceActive: 'Service running', serviceStopped: 'Service stopped', serviceFailed: 'Service failed',
+    serviceStarting: 'Service starting', serviceStopping: 'Service stopping', serviceReloading: 'Service reloading',
+    serviceUnavailable: 'Service status unavailable', serviceUnknown: 'Unknown service status', coolingActive: 'Cooling active',
     sensorUnavailable: 'Sensor unavailable', dashboardOffline: 'Dashboard disconnected',
     controlActive: 'Smart control active', controlUnavailable: 'Control status unavailable',
     modeUnknown: 'Mode unknown', quietModeShort: 'Quiet smart', boostModeShort: 'Boost cooling',
@@ -80,6 +84,11 @@ const serverErrors = {
   'الوضع المطلوب غير صالح.': 'unsupportedRequest',
   'مساعد التحكم المحمي غير مثبت أو صلاحياته غير آمنة. ثبّت اللوحة أولًا.': 'helperMissing',
   'تعذر تشغيل طلب الصلاحية. تأكد من وجود pkexec ومكوّن المصادقة.': 'authUnavailable'
+};
+const serviceStateMessages = {
+  active: 'serviceActive', inactive: 'serviceStopped', failed: 'serviceFailed',
+  activating: 'serviceStarting', deactivating: 'serviceStopping', reloading: 'serviceReloading',
+  'غير متاح': 'serviceUnavailable'
 };
 
 function t(key, values = {}) {
@@ -129,14 +138,18 @@ function updateModeLabel(mode) {
   $('fan-foot-mode').textContent = mode === 'boost' ? t('boostModeShort') : mode === 'quiet' ? t('quietModeShort') : t('modeUnknown');
 }
 
+function serviceLabel(state) {
+  return t(serviceStateMessages[state] || 'serviceUnknown');
+}
+
 function updateLiveLabels(data) {
   const temp = data.temperature;
   const active = data.service === 'active';
   $('temp-label').textContent = temp == null ? t('tempUnavailable') : temp >= 85 ? t('highTemp') : temp >= 75 ? t('warmTemp') : t('stableTemp');
-  $('service-label').textContent = active ? t('serviceActive') : t('serviceStopped');
+  $('service-label').textContent = serviceLabel(data.service);
   $('service-label').parentElement.classList.toggle('offline', !active);
-  $('system-state').textContent = temp == null ? t('sensorUnavailable') : active ? t('coolingActive') : t('serviceStopped');
-  $('fan-control-state').textContent = active ? t('controlActive') : t('serviceStopped');
+  $('system-state').textContent = temp == null ? t('sensorUnavailable') : active ? t('coolingActive') : serviceLabel(data.service);
+  $('fan-control-state').textContent = active ? t('controlActive') : serviceLabel(data.service);
 }
 
 function showNotice(key, isError = false) {
