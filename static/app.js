@@ -34,7 +34,7 @@ const messages = {
     sensorUnavailable: 'المستشعر غير متاح', dashboardOffline: 'اللوحة غير متصلة',
     controlActive: 'تحكم ذكي نشط', controlUnavailable: 'حالة التحكم غير متاحة',
     modeUnknown: 'الوضع غير معروف', quietModeShort: 'هادئ ذكي', boostModeShort: 'تبريد قوي',
-    lastUpdate: 'آخر تحديث {time}', readingCount: '{count} قراءة',
+    lastUpdate: 'آخر تحديث {time}',
     requestingAuthorization: 'جارٍ طلب تأكيد الصلاحية…', boostEnabled: 'تم تفعيل التبريد القوي.',
     quietEnabled: 'تم تفعيل الوضع الهادئ الذكي.', connectionError: 'تعذر قراءة حالة الجهاز.',
     modeError: 'لم يتغير وضع المراوح.', genericModeError: 'تعذر تغيير وضع المراوح.',
@@ -51,7 +51,7 @@ const messages = {
     fanOdd: 'Fan 1', fanHdd: 'Fan 2', fanCpu: 'Fan 3',
     unknownControl: 'Control status unknown', temperatureSensor: 'Temperature sensor', temperature: 'Temperature',
     temperatureGauge: 'Temperature gauge', celsius: 'Degrees Celsius', recentReadings: 'Recent readings',
-    sinceDashboardOpened: 'Since dashboard opened', recentReadingsChart: 'Recent temperature readings chart', now: 'Now',
+    sinceDashboardOpened: 'Since page load', recentReadingsChart: 'Recent temperature readings chart', now: 'Now',
     coolingStyle: 'Choose a cooling profile', operatingMode: 'Operating mode',
     authConfirmation: 'Changing the mode requires system authorization.', quietMode: 'Quiet smart',
     quietDescription: 'Balances noise and cooling', boostMode: 'Boost cooling',
@@ -65,7 +65,7 @@ const messages = {
     sensorUnavailable: 'Sensor unavailable', dashboardOffline: 'Dashboard disconnected',
     controlActive: 'Smart control active', controlUnavailable: 'Control status unavailable',
     modeUnknown: 'Mode unknown', quietModeShort: 'Quiet smart', boostModeShort: 'Boost cooling',
-    lastUpdate: 'Last updated {time}', readingCount: '{count} readings',
+    lastUpdate: 'Last updated {time}',
     requestingAuthorization: 'Waiting for system authorization…', boostEnabled: 'Boost cooling enabled.',
     quietEnabled: 'Quiet smart mode enabled.', connectionError: 'Could not read device status.',
     modeError: 'The fan mode did not change.', genericModeError: 'Could not change the fan mode.',
@@ -100,6 +100,12 @@ function formatNumber(value) {
   return new Intl.NumberFormat(locale, {maximumFractionDigits: 1}).format(value);
 }
 
+function readingCountText(count) {
+  const formattedCount = formatNumber(count);
+  if (currentLanguage === 'en') return `${formattedCount} ${count === 1 ? 'reading' : 'readings'}`;
+  return count === 1 ? 'قراءة واحدة' : `${formattedCount} قراءة`;
+}
+
 function applyLanguage() {
   document.documentElement.lang = currentLanguage;
   document.documentElement.dir = currentLanguage === 'ar' ? 'rtl' : 'ltr';
@@ -112,7 +118,7 @@ function applyLanguage() {
   });
   $('language-button').textContent = t('languageButton');
   $('language-button').setAttribute('aria-label', t('languageLabel'));
-  $('reading-count').textContent = t('readingCount', {count: formatNumber(readings.length)});
+  $('reading-count').textContent = readingCountText(readings.length);
   if (lastStatus) updateLiveLabels(lastStatus);
   if (connectionFailed) {
     $('service-label').textContent = t('dashboardOffline');
@@ -163,7 +169,7 @@ function updateHistory(temp) {
   if (temp == null) return;
   readings.push({time: Date.now(), temp});
   if (readings.length > 42) readings.shift();
-  $('reading-count').textContent = t('readingCount', {count: formatNumber(readings.length)});
+  $('reading-count').textContent = readingCountText(readings.length);
   const width = 360, height = 48, pad = 3;
   const vals = readings.map(x => x.temp), lo = Math.min(35, ...vals), hi = Math.max(60, ...vals);
   const span = Math.max(8, hi - lo);

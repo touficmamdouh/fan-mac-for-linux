@@ -10,7 +10,7 @@ DEST=/opt/fan-dashboard
 STAMP=$(date +%Y%m%d-%H%M%S)
 BACKUP="/var/backups/fan-dashboard-$STAMP"
 mkdir -p "$BACKUP"
-for path in /usr/local/bin/smart-fan.sh /usr/local/bin/fan-toggle.sh /usr/local/libexec/smart-fan-common.sh /etc/systemd/system/smart-fan.service; do
+for path in /usr/local/bin/smart-fan.sh /usr/local/bin/fan-toggle.sh /usr/local/bin/fan-dashboard-launcher /usr/local/libexec/smart-fan-common.sh /etc/systemd/system/smart-fan.service /usr/share/applications/fan-dashboard.desktop; do
     if [[ -e "$path" ]]; then
         mkdir -p "$BACKUP$(dirname "$path")"
         cp -a "$path" "$BACKUP$path"
@@ -46,6 +46,25 @@ cat > /usr/local/bin/smart-fan.sh <<'WRAPPER'
 exec /opt/fan-dashboard/smart-fan.sh "$@"
 WRAPPER
 chmod 0755 /usr/local/bin/smart-fan.sh
+install -o root -g root -m 0755 "$SRC/fan-dashboard-launcher.sh" /usr/local/bin/fan-dashboard-launcher
+install -d -o root -g root -m 0755 /usr/share/applications
+cat > /usr/share/applications/fan-dashboard.desktop <<'DESKTOP'
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=iMac Fan Dashboard
+Name[ar]=لوحة مراوح iMac
+GenericName=Fan monitoring and control
+GenericName[ar]=مراقبة وتحكم بالمراوح
+Comment=Monitor iMac temperature and fan speeds
+Comment[ar]=راقب حرارة iMac وسرعات المراوح
+Exec=/usr/local/bin/fan-dashboard-launcher
+Icon=utilities-system-monitor
+Terminal=false
+Categories=Utility;
+StartupNotify=true
+DESKTOP
+chmod 0644 /usr/share/applications/fan-dashboard.desktop
 systemctl daemon-reload
 systemctl enable smart-fan.service >/dev/null
 systemctl restart smart-fan.service

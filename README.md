@@ -11,6 +11,7 @@ A small, local-only dashboard for monitoring temperatures and fan speeds on supp
 - Arabic and English dashboard with automatic right-to-left/left-to-right layout, live temperature, three fan RPM readings, service state, and a short in-page temperature trace. The language choice is saved in the browser.
 - Local HTTP server bound only to `127.0.0.1`; no third-party Python packages.
 - Explicit quiet and boost controls. Mode changes go through `pkexec`; the web server itself runs as the logged-in user.
+- Desktop launcher detects a dashboard server left in an old login session and restarts it in the active session so the PolicyKit authorization prompt can appear.
 - Existing systemd fan controller remains responsible for thermal control. Missing sensor readings trigger its full-speed failsafe.
 - Timestamped backup of existing fan scripts and the service unit during installation.
 
@@ -26,7 +27,7 @@ A small, local-only dashboard for monitoring temperatures and fan speeds on supp
 sudo ./install.sh
 ```
 
-The installer places the runtime in `/opt/fan-dashboard`, installs the `smart-fan.service` unit and compatibility commands, creates a backup under `/var/backups/`, enables the service, and restarts it.
+The installer places the runtime in `/opt/fan-dashboard`, installs the `smart-fan.service` unit, compatibility commands, and an application menu entry, creates a backup under `/var/backups/`, enables the service, and restarts it.
 
 ## Run
 
@@ -36,11 +37,13 @@ fan-dashboard
 
 The local dashboard opens in your browser. Press `Ctrl+C` in the terminal to stop the web server. A different port can be selected with `fan-dashboard --port 8766`.
 
+You can also open **iMac Fan Dashboard** from the applications menu. Its launcher keeps the dashboard attached to the active desktop login so mode changes can request system authorization.
+
 The legacy `fan-toggle.sh` command toggles between quiet and boost without opening the dashboard.
 
 ## Uninstall
 
-Stop and disable the service with `sudo systemctl disable --now smart-fan.service`, then remove `/opt/fan-dashboard`, `/usr/local/bin/fan-dashboard`, `/usr/local/bin/fan-toggle.sh`, `/usr/local/bin/smart-fan.sh`, and `/etc/systemd/system/smart-fan.service`. Run `sudo systemctl daemon-reload`. Restore any prior system files from the timestamped backup if needed.
+Stop and disable the service with `sudo systemctl disable --now smart-fan.service`, then remove `/opt/fan-dashboard`, `/usr/local/bin/fan-dashboard`, `/usr/local/bin/fan-dashboard-launcher`, `/usr/local/bin/fan-toggle.sh`, `/usr/local/bin/smart-fan.sh`, `/usr/share/applications/fan-dashboard.desktop`, and `/etc/systemd/system/smart-fan.service`. Run `sudo systemctl daemon-reload`. Restore any prior system files from the timestamped backup if needed.
 
 ## License
 
@@ -69,3 +72,5 @@ fan-dashboard
 ```
 
 تعمل اللوحة على الجهاز المحلي فقط، ولا تحتاج مكتبات Python خارجية. خادم الويب يعمل كمستخدم عادي؛ تغيير الوضع يطلب موافقة النظام. خدمة systemd هي المسؤولة عن ضبط سرعات المراوح، وتُنشأ نسخة احتياطية مؤرخة عند التثبيت.
+
+يمكنك فتح **لوحة مراوح iMac** من قائمة التطبيقات. يعيد مشغّل سطح المكتب ربط اللوحة بجلسة الدخول الحالية حتى تظهر نافذة تأكيد الصلاحية عند تغيير الوضع.
